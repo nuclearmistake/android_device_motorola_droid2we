@@ -132,6 +132,7 @@ PRODUCT_PACKAGES += \
     libOMX.TI.Video.encoder \
     libVendor_ti_omx \
     gps.droid2 \
+    sensors.droid2 \
     Usb \
     libaudiopolicy
 
