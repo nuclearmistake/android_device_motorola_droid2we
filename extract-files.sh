@@ -200,7 +200,10 @@ adb pull /system/tts/lang_pico/en-US_ta.bin ../../../vendor/motorola/$DEVICE/pro
 adb pull /system/tts/lang_pico/es-ES_ta.bin ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/tts/lang_pico/es-ES_zl0_sg.bin ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/usr/keychars/cdma_droid2we-keypad.kcm.bin ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/usr/keychars/qwerty.kcm.bin ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/usr/keychars/qwerty2.kcm.bin ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/usr/keylayout/cdma_droid2we-keypad.kl ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/usr/keylayout/qwerty.kl ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/usr/keylayout/cpcap-key.kl ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/xbin/backup ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/xbin/drm1_func_test ../../../vendor/motorola/$DEVICE/proprietary
@@ -218,6 +221,16 @@ adb pull /system/lib/libsmiledetect.so ../../../vendor/motorola/$DEVICE/propriet
 adb pull /system/lib/libsmiledetect.so ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/lib/libLCML.so ../../../vendor/motorola/$DEVICE/proprietary
 adb pull /system/lib/libbridge.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libmoto_ril.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libpppd_plugin-ril.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libreference-ril.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libril.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libril_rds.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libbattd.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/bin/battd ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/libusc.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/hw/lights.droid2we.so ../../../vendor/motorola/$DEVICE/proprietary
+adb pull /system/lib/hw/sensors.droid2we.so ../../../vendor/motorola/$DEVICE/proprietary
 
 (cat << EOF) | sed s/__DEVICE__/$DEVICE/g > ../../../vendor/motorola/$DEVICE/$DEVICE-vendor-blobs.mk
 # Copyright (C) 2010 The Android Open Source Project
@@ -427,7 +440,6 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/libui3d.so:/system/lib/libui3d.so \\
     vendor/motorola/__DEVICE__/proprietary/libvideoeditorlite.so:/system/lib/libvideoeditorlite.so \\
     vendor/motorola/__DEVICE__/proprietary/libvisualization_jni.so:/system/lib/libvisualization_jni.so \\
-    vendor/motorola/__DEVICE__/proprietary/libvsuite_sharedlib.so:/system/lib/libvsuite_sharedlib.so \\
     vendor/motorola/__DEVICE__/proprietary/libwbxmlparser.so:/system/lib/libwbxmlparser.so \\
     vendor/motorola/__DEVICE__/proprietary/ulogd_BASE.so:/system/lib/ulogd_BASE.so \\
     vendor/motorola/__DEVICE__/proprietary/ulogd_SQLITE3.so:/system/lib/ulogd_SQLITE3.so \\
@@ -436,7 +448,10 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/es-ES_ta.bin:/system/tts/lang_pico/es-ES_ta.bin \\
     vendor/motorola/__DEVICE__/proprietary/es-ES_zl0_sg.bin:/system/tts/lang_pico/es-ES_zl0_sg.bin \\
     vendor/motorola/__DEVICE__/proprietary/cdma_droid2we-keypad.kcm.bin:/system/usr/keychars/cdma_droid2we-keypad.kcm.bin \\
+    vendor/motorola/__DEVICE__/proprietary/qwerty.kcm.bin:/system/usr/keychars/qwerty.kcm.bin \\
+    vendor/motorola/__DEVICE__/proprietary/qwerty2.kcm.bin:/system/usr/keychars/qwerty2.kcm.bin \\
     vendor/motorola/__DEVICE__/proprietary/cdma_droid2we-keypad.kl:/system/usr/keylayout/cdma_droid2we-keypad.kl \\
+    vendor/motorola/__DEVICE__/proprietary/qwerty.kl:/system/usr/keylayout/qwerty.kl \\
     vendor/motorola/__DEVICE__/proprietary/cpcap-key.kl:/system/usr/keylayout/cpcap-key.kl \\
     vendor/motorola/__DEVICE__/proprietary/backup:/system/xbin/backup \\
     vendor/motorola/__DEVICE__/proprietary/drm1_func_test:/system/xbin/drm1_func_test \\
@@ -453,7 +468,17 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/libsmiledetect.so:/system/lib/libsmiledetect.so \\
     vendor/motorola/__DEVICE__/proprietary/libsmiledetect.so:/system/lib/libsmiledetect.so \\
     vendor/motorola/__DEVICE__/proprietary/libbridge.so:/system/lib/libbridge.so \\
-    vendor/motorola/__DEVICE__/proprietary/libLCML.so:/system/lib/libLCML.so
+    vendor/motorola/__DEVICE__/proprietary/libLCML.so:/system/lib/libLCML.so \\
+    vendor/motorola/__DEVICE__/proprietary/libmoto_ril.so:/system/lib/libmoto_ril.so \\
+    vendor/motorola/__DEVICE__/proprietary/libpppd_plugin-ril.so:/system/lib/libpppd_plugin-ril.so \\
+    vendor/motorola/__DEVICE__/proprietary/libreference-ril.so:/system/lib/libreference-ril.so \\
+    vendor/motorola/__DEVICE__/proprietary/libril.so:/system/lib/libril.so \\
+    vendor/motorola/__DEVICE__/proprietary/libril_rds.so:/system/lib/libril_rds.so \\
+    vendor/motorola/__DEVICE__/proprietary/libbattd.so:/system/lib/libattd.so \\
+    vendor/motorola/__DEVICE__/proprietary/battd.so:/system/bin/battd \\
+    vendor/motorola/__DEVICE__/proprietary/libusc.so:/system/lib/libusc.so \\
+    vendor/motorola/__DEVICE__/proprietary/lights.droid2we.so:/system/lib/hw/lights.droid2we.so
+    vendor/motorola/__DEVICE__/proprietary/sensors.droid2we.so:/system/lib/hw/sensors.droid2we.so
 
 EOF
 
