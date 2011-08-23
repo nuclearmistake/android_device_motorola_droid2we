@@ -477,7 +477,7 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/libbattd.so:/system/lib/libattd.so \\
     vendor/motorola/__DEVICE__/proprietary/battd.so:/system/bin/battd \\
     vendor/motorola/__DEVICE__/proprietary/libusc.so:/system/lib/libusc.so \\
-    vendor/motorola/__DEVICE__/proprietary/lights.droid2we.so:/system/lib/hw/lights.droid2we.so
+    vendor/motorola/__DEVICE__/proprietary/lights.droid2we.so:/system/lib/hw/lights.droid2we.so \\
     vendor/motorola/__DEVICE__/proprietary/sensors.droid2we.so:/system/lib/hw/sensors.droid2we.so
 
 EOF
