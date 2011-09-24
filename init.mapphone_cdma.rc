@@ -11,6 +11,9 @@ on post-fs
     mount yaffs2 mtd@cdrom /cdrom ro
 
     symlink /dev/ttyGS0 /dev/acm0
+    
+    chown system shell /data/local
+    chown system shell /data/local/tmp
 
 # Create mountpoints and mount tmpfs
     mkdir /pds 0775 system system
