@@ -290,9 +290,9 @@ service usbd /system/bin/usbd
     group system
 
 service battd /system/bin/battd
-    socket battdsock stream 0660 root mount
+    socket battdsock stream 0660 mot_accy mot_accy
     user root
-    group system mount
+    group mot_accy mot_pwric
     oneshot
 
 service catcommands /system/bin/catcommands

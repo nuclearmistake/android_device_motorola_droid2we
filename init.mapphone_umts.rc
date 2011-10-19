@@ -370,7 +370,7 @@ service rild_tcmd /system/bin/rild_tcmd
 
 service battd /system/bin/battd
     class pre-zygote_services
-    socket battdsock stream 0660 mot_accy mot_accy
+    socket battdsock stream 0660 root system
     user root
     group mot_accy mot_pwric
     oneshot
