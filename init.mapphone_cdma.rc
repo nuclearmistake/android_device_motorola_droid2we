@@ -140,7 +140,16 @@ on post-fs
 
     # Temp workaround for HP library cleanup
     symlink /dev/hp3a-omap /dev/hp3A-omap
-
+    chmod 0770 /dev/hp3a-omap
+    chmod 0770 /dev/hplens-omap
+    chmod 0770 /dev/video0
+    chmod 0770 /dev/video1
+    chmod 0770 /dev/video2
+    chown media camera /dev/hp3a-omap
+    chown media camera /dev/hplens-omap
+    chown media camera /dev/video0
+    chown media graphics /dev/video1
+    chown media graphics /dev/video2
     mount rootfs rootfs / ro remount
 
 # Install kernel modules
@@ -226,7 +235,7 @@ on boot
     chmod 0666 /sys/class/leds/torch-flash/flash_light
 
 # Enable panic on softlockup
-    write /proc/sys/kernel/softlockup_panic 1
+#    write /proc/sys/kernel/softlockup_panic 1
 
 # Load traffic shaping modules
     insmod /system/lib/modules/ifb.ko
@@ -240,15 +249,44 @@ on boot
 # Load Authentec VPN kernel module
     insmod /system/lib/modules/vpnclient.ko
 
+# Start services
+    exec /system/bin/mot_boot_mode
+
 # Set core max size (2G)
     setrlimit 4 2147483648 2147483648
 
 # The properties introduced by moto
+
 on property:sys.chargeonly.mode=1
     start battd
     start console
     write /data/chargeonlymode charging
     exec /system/bin/charge_only_mode
+
+# Power up to normal
+on property:tcmd.suspend=0
+    class_start pre-zygote_services
+    class_start zygote_services
+    class_start post-zygote_services
+
+# Power up to suspend 
+on property:tcmd.suspend=1
+    class_start pre-zygote_services
+    class_start post-zygote_services
+
+# Normal to suspend 
+on property:tcmd.suspend=2
+    class_stop zygote_services
+
+# aplogd on at boot in emulator
+on property:ro.kernel.qemu=1
+    start aplogd
+
+on property:persist.service.aplogd.enable=1
+    start aplogd
+
+on property:persist.service.aplogd.enable=0
+    stop aplogd
 
 # Moto safe power down
 on property:sys.reboot=1
@@ -258,6 +296,7 @@ on property:sys.reboot=1
 on property:sys.shutdown=1
     exec /system/bin/sleep 10
     exec /system/bin/reboot -p
+
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
@@ -276,6 +315,7 @@ on property:init.svc.wpa_supplicant=stopped
 # ro.sys.atvc_allow_netmon_ih
 # ro.sys.atvc_allow_all_adb
 service atvc /system/bin/dbvc_atvc_property_set
+#    class pre-zygote_services
     user system
     group system
     oneshot
@@ -283,63 +323,75 @@ service atvc /system/bin/dbvc_atvc_property_set
 #service watchdogd /system/bin/watchdogd
 
 service telnet /system/bin/telnetd
+#    class pre-zygote_services
     oneshot
 
 service usbd /system/bin/usbd
+#    class pre-zygote_services
     user root
     group system
 
 service battd /system/bin/battd
+#    class pre-zygote_services
     socket battdsock stream 0660 mot_accy mot_accy
     user root
     group mot_accy mot_pwric
     oneshot
 
 service catcommands /system/bin/catcommands
+#    class pre-zygote_services
     group radio
 
 service hciattach /system/bin/hciattach \
         -n -t 10 /dev/ttyS1 texasalt 3000000 flow
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
 
 service hciattach_rfmd /system/bin/hciattach \
         -n -t 10 /dev/ttyS1 texasalt_rfmd 3000000 flow
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
 
 service nap /system/bin/sdptool add NAP
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service del_nap /system/bin/sdptool remove NAP
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service panu /system/bin/sdptool add PANU
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service del_panu /system/bin/sdptool remove PANU
+#    class post-zygote_services
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service napics /system/bin/sh /system/bin/napics.sh
+#    class post-zygote_services
     user root
     disabled
     oneshot
 
 service btdhcpd /system/bin/dnsmasq -C /etc/btpan.conf
+#    class post-zygote_services
     user root
     disabled
     oneshot
@@ -351,30 +403,77 @@ service map /system/bin/sdptool add --channel=20 --network=2 MAP
     oneshot
 
 service tcmd /system/bin/tcmd
-    group radio input system log camera graphics sdcard_rw audio inet bluetooth wifi compass net_bt_admin mount net_raw net_admin
-    socket local_tcmd stream 0660 system system
-    socket batch_socket stream 0600 system system
+#    class post-zygote_services
+    group mot_tcmd radio mot_pwric input system log camera graphics mot_accy sdcard_rw audio inet bluetooth wifi compass net_bt_admin mot_tombstone mot_tpapi mount mot_whisper
+    socket local_tcmd stream 0660 mot_tcmd mot_tcmd
+    socket batch_socket stream 0600 mot_tcmd mot_tcmd
     oneshot
 
 service tcmdhelp /system/bin/tcmdhelp
-    socket tcmdhelp stream 0600 system system
+#    class post-zygote_services
+    socket tcmdhelp stream 0600 mot_tcmd mot_tcmd
     oneshot
     disabled
 
+
+# turn on wifi for tcmd step one
+on property:tcmd.load_wlan=1
+    insmod /system/lib/modules/tiwlan_drv.ko
+
+# turn on wifi for tcmd step two
+on property:tcmd.load_wlan=2
+    start wlan_loader
+
+# turn on wifi for tcmd step three
+on property:tcmd.load_wlan=3
+    exec /system/bin/ifconfig tiwlan0 up
+
+# turn off wifi for tcmd step one
+on property:tcmd.unload_wlan=1
+    exec /system/bin/ifconfig tiwlan0 down
+
+# turn off wifi for tcmd step two
+on property:tcmd.unload_wlan=2
+    exec /system/bin/rmmod tiwlan_drv
+    setprop wlan.driver.status unloaded
+
+# turn on bluetooth for tcmd
+on property:tcmd.bt_mod=1
+    insmod /system/lib/modules/wl127x_test.ko
+
+#turn off bluetooth for tcmd
+on property:tcmd.bt_mod=0
+    exec /system/bin/rmmod wl127x_test
+
+#execute tcmdhelp
+on property:tcmd.start_tcmdhelp=1
+    start tcmdhelp
+
 # Ecompass daemon
 service akmd2 /system/bin/akmd2
+#    class post-zygote_services
     user compass
     group compass misc input
+
+
+service panic_daemon /system/usr/bin/panic_daemon
+#    class post-zygote_services
+    user radio
+    group log radio system graphics sdcard_rw
+    socket panic_daemon stream 660 radio radio
+    onrestart exec /system/bin/reboot
 
 service wlan_loader /system/bin/wlan_loader \
         -f /system/etc/wifi/fw_wlan1271.bin -i /system/etc/wifi/tiwlan.ini \
         -e /pds/wifi/nvs_map.bin
+#    class post-zygote_services
     disabled
     oneshot
 
 service wlan_loader_rfmd /system/bin/wlan_loader \
         -f /system/etc/wifi/fw_wlan1271_rfmd.bin -i /system/etc/wifi/tiwlan_rfmd.ini \
         -e /pds/wifi/nvs_map.bin
+#    class post-zygote_services
     disabled
     oneshot
 
@@ -383,24 +482,29 @@ service wpa_supplicant /system/bin/wpa_supplicant \
 # we will start as root and wpa_supplicant will switch to user wifi
 # after setting up the capabilities required for WEXT
 # user wifi
-# group wifi inet keystore
+# group wifi inet keystore    
+#    class post-zygote_services
     socket wpa_tiwlan0 dgram 660 wifi wifi
     disabled
     oneshot
 
 service dhcpcd_tiwlan0 /system/bin/dhcpcd -ABKL tiwlan0
+#    class post-zygote_services
     disabled
     oneshot
 
 service autoip /system/bin/dhcpcd -BK tiwlan0
+#    class post-zygote_services
     disabled
     oneshot
 
 service btdhcpcd /system/bin/dhcpcd -ABKL bnep0
+#    class post-zygote_services
     disabled
     oneshot
 
 service btautoip /system/bin/dhcpcd -BK bnep0
+#    class post-zygote_services
     disabled
     oneshot
 
@@ -411,12 +515,14 @@ service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     oneshot
 
 service pvrsrv /system/bin/pvrsrvinit
+#    class post-zygote_services
     user root
     oneshot
 
 # bugtogo is triggered by the keycodes defined in vendor/moto/<product>/proprietary/<hw rev>/device_tree.xml
 # The keycodes option is listed below with dummy values, because the parser needs this.
 service bugtogo /system/bin/bugtogo.sh
+#    class post-zygote_services
     disabled
     user root
     oneshot
@@ -424,73 +530,99 @@ service bugtogo /system/bin/bugtogo.sh
 
 service pppd-ril /system/bin/pppd-ril /dev/ttyUSB0 \
         call pppd-ril.options plugin /system/lib/libpppd_plugin-ril.so
+#    class post-zygote_services
     user root
     disabled
     oneshot
 
 service pppd /system/bin/pppd silent ipparam dun plugin \
         /system/lib/libpppd_plugin.so
+#    class post-zygote_services
     user root
     disabled
     oneshot
 
 service ulogd /system/xbin/ulogd
+#    class post-zygote_services
     user root
     disabled
     oneshot
 
 service firewall /system/bin/firewall.sh
+#    class post-zygote_services
     user root
     disabled
     oneshot
 
 service pm_init /system/bin/sh /system/usr/bin/pm_init.sh
+#    class post-zygote_services
     oneshot
 
 service modemlog /system/bin/modemlog
+   class post-zygote_services
    oneshot
 
 # aplogd is controlled by the persist.service.aplogd.enable system property
 service aplogd /system/bin/aplogd
+#    class post-zygote_services
     socket ap_aol_cmd stream 666 system system
     group log system sdcard_rw
     oneshot
 
 service fmradio /system/bin/fmradioserver
+#    class post-zygote_services
     disabled
     group bluetooth
 
 service ftmipcd /system/bin/ftmipcd
+#    class post-zygote_services
     user radio
     group radio inet
     oneshot
 
 service dlnasrv /system/bin/dlnasrv
+#    class post-zygote_services
     disabled
     oneshot
 
 service dund_dialup /system/bin/dund --listen --channel=6 --nodetach --dialup
+#    class post-zygote_services
     group net_bt net_bt_admin
     disabled
     oneshot
 
 on property:dev.bootcomplete=1
     start savebpver
-#    start loadpreinstalls
+    start loadpreinstalls
 
 service mdm_panicd /system/bin/mdm_panicd
     oneshot
 
+on property:tcmd.ctrl_adb=1
+    setprop persist.service.adb.enable 1
+    setprop persist.factory.allow_adb  1
+    stop usbd
+    start usbd
+
+on property:tcmd.ctrl_adb=0
+    setprop persist.service.adb.enable 0
+    setprop persist.factory.allow_adb  0
+    stop usbd
+    start usbd
+
 #get BP version and save to misc
 service savebpver /system/bin/SaveBPVer
+#    class post-zygote_services
     oneshot
 
 #start Authentec VPN service
 service vpnclientpm /system/bin/vpnclientpm
+#    class post-zygote_services
     oneshot
     user root
 
 service loadpreinstalls /system/bin/logwrapper /system/bin/loadpreinstalls.sh
+#    class post-zygote_services
     disabled
     oneshot
 

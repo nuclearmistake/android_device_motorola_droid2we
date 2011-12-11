@@ -149,7 +149,16 @@ on post-fs
 
 # Temp workaround for HP library cleanup
     symlink /dev/hp3a-omap /dev/hp3A-omap
-
+    chmod 0770 /dev/hp3a-omap
+    chmod 0770 /dev/hplens-omap
+    chmod 0770 /dev/video0
+    chmod 0770 /dev/video1
+    chmod 0770 /dev/video2
+    chown media camera /dev/hp3a-omap
+    chown media camera /dev/hplens-omap
+    chown media camera /dev/video0
+    chown media graphics /dev/video1
+    chown media graphics /dev/video2
     mount rootfs rootfs / ro remount
 
 # Install kernel modules
@@ -245,7 +254,7 @@ on boot
    chown media camera /dev/hplens-omap
 
 # Enable panic on softlockup
-    write /proc/sys/kernel/softlockup_panic 1
+#    write /proc/sys/kernel/softlockup_panic 1
 
 # Start services
     exec /system/bin/mot_boot_mode
@@ -464,7 +473,7 @@ service btdhcpd /system/bin/dnsmasq -C /system/etc/btpan.conf
 
 service tcmd /system/bin/tcmd
     class post-zygote_services
-    group mot_tcmd radio mot_pwric input system log camera graphics mot_accy sdcard_rw audio inet bluetooth wifi compass net_bt_admin mot_tombstone mot_tpapi mount
+    group mot_tcmd radio mot_pwric input system log camera graphics mot_accy sdcard_rw audio inet bluetooth wifi compass net_bt_admin mot_tombstone mot_tpapi mount mot_whisper
     socket local_tcmd stream 0660 mot_tcmd mot_tcmd
     socket batch_socket stream 0600 mot_tcmd mot_tcmd
     oneshot
