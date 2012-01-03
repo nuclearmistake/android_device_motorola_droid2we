@@ -27,6 +27,7 @@ $(call inherit-product, device/common/gps/gps_us_supl.mk)
 PRODUCT_COPY_FILES += \
     device/motorola/droid2we/init.mapphone_cdma.rc:root/init.mapphone_cdma.rc \
     device/motorola/droid2we/init.mapphone_umts.rc:root/init.mapphone_umts.rc \
+	device/motorola/droid2we/init.rc:root/init.rc \
     device/motorola/droid2we/ueventd.mapphone_cdma.rc:root/ueventd.mapphone_cdma.rc
 
 ## (2) Also get non-open-source GSM-specific aspects if available
@@ -43,12 +44,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.ril.mux.sleep=2 \
     ro.default_usb_mode=4 \
     ro.product.multi_touch_enabled=true \
-    ro.product.max_num_touch=2 \
+    ro.product.max_num_touch=10 \
     ro.telephony.sms_segment_size=160 \
     ro.setupwizard.mode=OPTIONAL \
     ro.com.google.gmsversion=2.2_r7 \
-    ro.telephony.call_ring.multiple=false \
-    ro.telephony.call_ring.delay=1000 \
+    ro.telephony.call_ring.multiple=true \
+    ro.telephony.call_ring.delay=0 \
     ro.url.safetylegal=http://www.motorola.com/staticfiles/Support/legal/?model=A956 \
     ro.setupwizard.enable_bypass=1 \
     ro.com.google.clientid=android-motorola \

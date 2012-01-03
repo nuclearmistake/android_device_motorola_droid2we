@@ -133,23 +133,32 @@ on post-fs
     mkdir /data/tpapi/etc
     mkdir /data/tpapi/etc/tpa
     mkdir /data/tpapi/etc/tpa/persistent
-    chmod 2770 /pds/security
-    chmod 2770 /data/tpapi
-    chmod 2770 /data/tpapi/etc
-    chmod 2770 /data/tpapi/etc/tpa
-    chmod 2770 /data/tpapi/etc/tpa/persistent
     chown mot_tpapi mot_tpapi /pds/security
     chown mot_tpapi mot_tpapi /data/tpapi
     chown mot_tpapi mot_tpapi /data/tpapi/etc
     chown mot_tpapi mot_tpapi /data/tpapi/etc/tpa
     chown mot_tpapi mot_tpapi /data/tpapi/etc/tpa/persistent
+    chmod 2770 /pds/security
+    chmod 2770 /data/tpapi
+    chmod 2770 /data/tpapi/etc
+    chmod 2770 /data/tpapi/etc/tpa
+    chmod 2770 /data/tpapi/etc/tpa/persistent
 
     # Create wmdrm directory
     mkdir /pds/wmdrm 0775 mot_drm mot_drm
 
 # Temp workaround for HP library cleanup
     symlink /dev/hp3a-omap /dev/hp3A-omap
-
+    chmod 0770 /dev/hp3a-omap
+    chmod 0770 /dev/hplens-omap
+    chmod 0770 /dev/video0
+    chmod 0770 /dev/video1
+    chmod 0770 /dev/video2
+    chown media camera /dev/hp3a-omap
+    chown media camera /dev/hplens-omap
+    chown media camera /dev/video0
+    chown media graphics /dev/video1
+    chown media graphics /dev/video2
     mount rootfs rootfs / ro remount
 
 # Install kernel modules
@@ -184,6 +193,7 @@ on early-boot
     setprop ro.CONTENT_PROVIDER_MEM 12288
     setprop ro.EMPTY_APP_MEM 12288
  
+    chmod 0666 /dev/DspBridge
     class_start media_early_init
 
 on boot
@@ -245,7 +255,7 @@ on boot
    chown media camera /dev/hplens-omap
 
 # Enable panic on softlockup
-    write /proc/sys/kernel/softlockup_panic 1
+#    write /proc/sys/kernel/softlockup_panic 1
 
 # Start services
     exec /system/bin/mot_boot_mode
@@ -372,7 +382,7 @@ service battd /system/bin/battd
     class pre-zygote_services
     socket battdsock stream 0660 root system
     user root
-    group mot_accy mot_pwric
+    group mot_accy mot_pwric system
     oneshot
 
 service catcommands /system/bin/catcommands
@@ -394,7 +404,7 @@ service modemlog /system/bin/modemlog
 
 service ssmgrd /system/xbin/ssmgrd
     class post-zygote_services
-    group radio input mot_pwric
+    group radio input mot_pwric system
     oneshot
 
 service hciattach /system/bin/hciattach \
@@ -466,12 +476,12 @@ service tcmd /system/bin/tcmd
     class post-zygote_services
     group mot_tcmd radio mot_pwric input system log camera graphics mot_accy sdcard_rw audio inet bluetooth wifi compass net_bt_admin mot_tombstone mot_tpapi mount
     socket local_tcmd stream 0660 mot_tcmd mot_tcmd
-    socket batch_socket stream 0600 mot_tcmd mot_tcmd
+    socket batch_socket stream 0600  mot_tcmd mot_tcmd
     oneshot
 
 service tcmdhelp /system/bin/tcmdhelp
     class post-zygote_services
-    socket tcmdhelp stream 0600 mot_tcmd mot_tcmd
+    socket tcmdhelp stream 0600  mot_tcmd mot_tcmd
     oneshot
     disabled
 
@@ -519,7 +529,7 @@ service panic_daemon /system/usr/bin/panic_daemon
 service akmd2 /system/bin/akmd2
     class post-zygote_services
     user compass
-    group compass misc input
+    group compass misc input system
 
 service wlan_loader /system/bin/wlan_loader \
     -f /system/etc/wifi/fw_wlan1271.bin -i /system/etc/wifi/tiwlan.ini \
@@ -562,7 +572,7 @@ service btautoip /system/bin/dhcpcd -BK bnep0
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
     class media_early_init
     user  media
-    group media graphics mot_whisper audio
+    group media graphics mot_whisper audio system
     oneshot
 
 service pvrsrv /system/bin/pvrsrvinit
@@ -644,7 +654,7 @@ service smcdaemon /system/bin/startup_smc.sh
 service ecckeydaemon /system/bin/ecckeyd
     class post-zygote_services
     socket ecckey_socket stream 660 mot_tpapi mot_tpapi
-    group mot_tpapi
+    group mot_tpapi system
     disabled
     oneshot
 
@@ -659,7 +669,7 @@ service secclkd /system/bin/secclkd
     class post-zygote_services
     socket secclk_socket stream 660 mot_secclkd mot_secclkd
     user mot_tpapi
-    group mot_tpapi mot_sec_rtc mot_secclkd
+    group mot_tpapi mot_sec_rtc mot_secclkd system
     oneshot
 
 service dla /system/bin/dla
