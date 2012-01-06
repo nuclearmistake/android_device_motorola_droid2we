@@ -47,7 +47,6 @@ adb pull /system/bin/battd ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/btcmd ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/bthelp ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/bttest_mot ../../../vendor/motorola/$DEVICE/proprietary/bin
-adb pull /system/bin/charge_only_mode ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/chat-ril ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/dbvc_atvc_property_set ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/dmt ../../../vendor/motorola/$DEVICE/proprietary/bin
@@ -281,7 +280,6 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/bin/btcmd:/system/bin/btcmd \\
     vendor/motorola/__DEVICE__/proprietary/bin/bthelp:/system/bin/bthelp \\
     vendor/motorola/__DEVICE__/proprietary/bin/bttest_mot:/system/bin/bttest_mot \\
-    vendor/motorola/__DEVICE__/proprietary/bin/charge_only_mode:/system/bin/charge_only_mode \\
     vendor/motorola/__DEVICE__/proprietary/bin/chat-ril:/system/bin/chat-ril \\
     vendor/motorola/__DEVICE__/proprietary/bin/dbvc_atvc_property_set:/system/bin/dbvc_atvc_property_set \\
     vendor/motorola/__DEVICE__/proprietary/bin/dmt:/system/bin/dmt \\
