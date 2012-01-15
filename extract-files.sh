@@ -31,8 +31,6 @@ mkdir -p ../../../vendor/motorola/$DEVICE/proprietary/usr/keychars
 mkdir -p ../../../vendor/motorola/$DEVICE/proprietary/usr/keylayout
 mkdir -p ../../../vendor/motorola/$DEVICE/proprietary/xbin
 
-
-
 adb pull /system/app/PhoneConfig.apk ../../../vendor/motorola/$DEVICE/proprietary/app
 adb pull /system/app/ProgramMenu.apk ../../../vendor/motorola/$DEVICE/proprietary/app
 adb pull /system/app/ProgramMenuSystem.apk ../../../vendor/motorola/$DEVICE/proprietary/app
@@ -47,7 +45,6 @@ adb pull /system/bin/battd ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/btcmd ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/bthelp ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/bttest_mot ../../../vendor/motorola/$DEVICE/proprietary/bin
-adb pull /system/bin/charge_only_mode ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/chat-ril ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/dbvc_atvc_property_set ../../../vendor/motorola/$DEVICE/proprietary/bin
 adb pull /system/bin/dmt ../../../vendor/motorola/$DEVICE/proprietary/bin
@@ -221,9 +218,9 @@ adb pull /system/tts/lang_pico/en-US_ta.bin ../../../vendor/motorola/$DEVICE/pro
 adb pull /system/tts/lang_pico/es-ES_ta.bin ../../../vendor/motorola/$DEVICE/proprietary/tts/lang_pico
 adb pull /system/tts/lang_pico/es-ES_zl0_sg.bin ../../../vendor/motorola/$DEVICE/proprietary/tts/lang_pico
 
-adb pull /system/usr/keychars/cdma_droid2we-keypad.kcm.bin ../../../vendor/motorola/$DEVICE/proprietary/usr/keychars
+adb pull /system/usr/keychars/cdma_droid2we-keypad.kcm.bin ../../../vendor/motorola/$DEVICE/proprietary/usr/keychars/sholes-keypad.kcm.bin
 
-adb pull /system/usr/keylayout/cdma_droid2we-keypad.kl ../../../vendor/motorola/$DEVICE/proprietary/usr/keylayout
+adb pull /system/usr/keylayout/cdma_droid2we-keypad.kl ../../../vendor/motorola/$DEVICE/proprietary/usr/keylayout/sholes-keypad.kl
 adb pull /system/usr/keylayout/cpcap-key.kl ../../../vendor/motorola/$DEVICE/proprietary/usr/keylayout
 
 adb pull /system/xbin/backup ../../../vendor/motorola/$DEVICE/proprietary/xbin
@@ -281,7 +278,6 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/bin/btcmd:/system/bin/btcmd \\
     vendor/motorola/__DEVICE__/proprietary/bin/bthelp:/system/bin/bthelp \\
     vendor/motorola/__DEVICE__/proprietary/bin/bttest_mot:/system/bin/bttest_mot \\
-    vendor/motorola/__DEVICE__/proprietary/bin/charge_only_mode:/system/bin/charge_only_mode \\
     vendor/motorola/__DEVICE__/proprietary/bin/chat-ril:/system/bin/chat-ril \\
     vendor/motorola/__DEVICE__/proprietary/bin/dbvc_atvc_property_set:/system/bin/dbvc_atvc_property_set \\
     vendor/motorola/__DEVICE__/proprietary/bin/dmt:/system/bin/dmt \\
@@ -395,6 +391,13 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/lib/libnativedrm1.so:/system/lib/libnativedrm1.so \\
     vendor/motorola/__DEVICE__/proprietary/lib/liboemcamera.so:/system/lib/liboemcamera.so \\
     vendor/motorola/__DEVICE__/proprietary/lib/libomx_arcomxcore_sharedlibrary.so:/system/lib/libomx_arcomxcore_sharedlibrary.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libarcomx_evrcdec_sharedlibrary.so:/system/lib/libarcomx_evrcdec_sharedlibrary \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libarcomx_qcelpdec_sharedlibrary.so:/system/lib/libarcomx_qcelpdec_sharedlibrary.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libarcomx_qcelpenc_sharedlibrary.so:/system/lib/libarcomx_qcelpenc_sharedlibrary.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libarcomx_wmadec_sharedlibrary.so:/system/lib/libarcomx_wmadec_sharedlibrary.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libreference-cdma-sms.so:/system/lib/libreference-cdma-sms.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libopencore_mp4local.so:/system/lib/libopencore_mp4local.so \\
+    vendor/motorola/__DEVICE__/proprietary/lib/libopencore_mp4localreg.so:/system/lib/libopencore_mp4localreg.so \\
     vendor/motorola/__DEVICE__/proprietary/lib/libpanorama.so:/system/lib/libpanorama.so \\
     vendor/motorola/__DEVICE__/proprietary/lib/libpanorama_jni.so:/system/lib/libpanorama_jni.so \\
     vendor/motorola/__DEVICE__/proprietary/lib/libpkip.so:/system/lib/libpkip.so \\
@@ -418,11 +421,11 @@ PRODUCT_COPY_FILES += \\
     vendor/motorola/__DEVICE__/proprietary/tts/lang_pico/en-US_ta.bin:/system/tts/lang_pico/en-US_ta.bin \\
     vendor/motorola/__DEVICE__/proprietary/tts/lang_pico/es-ES_ta.bin:/system/tts/lang_pico/es-ES_ta.bin \\
     vendor/motorola/__DEVICE__/proprietary/tts/lang_pico/es-ES_zl0_sg.bin:/system/tts/lang_pico/es-ES_zl0_sg.bin \\
-    vendor/motorola/__DEVICE__/proprietary/usr/keychars/cdma_droid2we-keypad.kcm.bin:/system/usr/keychars/cdma_droid2we-keypad.kcm.bin \\
-    vendor/motorola/__DEVICE__/proprietary/usr/keychars/cdma_droid2we-keypad.kcm.bin:/system/usr/keychars/qwerty.kcm.bin \\
-    vendor/motorola/__DEVICE__/proprietary/usr/keychars/cdma_droid2we-keypad.kcm.bin:/system/usr/keychars/qwerty2.kcm.bin \\
-    vendor/motorola/__DEVICE__/proprietary/usr/keylayout/cdma_droid2we-keypad.kl:/system/usr/keylayout/cdma_droid2we-keypad.kl \\
-    vendor/motorola/__DEVICE__/proprietary/usr/keylayout/cdma_droid2we-keypad.kl:/system/usr/keylayout/qwerty.kl \\
+    vendor/motorola/__DEVICE__/proprietary/usr/keychars/sholes-keypad.kcm.bin:/system/usr/keychars/sholes-keypad.kcm.bin \\
+    vendor/motorola/__DEVICE__/proprietary/usr/keychars/sholes-keypad.kcm.bin:/system/usr/keychars/qwerty.kcm.bin \\
+    vendor/motorola/__DEVICE__/proprietary/usr/keychars/sholes-keypad.kcm.bin:/system/usr/keychars/qwerty2.kcm.bin \\
+    vendor/motorola/__DEVICE__/proprietary/usr/keylayout/sholes-keypad.kl:/system/usr/keylayout/sholes-keypad.kl \\
+    vendor/motorola/__DEVICE__/proprietary/usr/keylayout/sholes-keypad.kl:/system/usr/keylayout/qwerty.kl \\
     vendor/motorola/__DEVICE__/proprietary/usr/keylayout/cpcap-key.kl:/system/usr/keylayout/cpcap-key.kl \\
     vendor/motorola/__DEVICE__/proprietary/xbin/backup:/system/xbin/backup \\
     vendor/motorola/__DEVICE__/proprietary/xbin/drm1_func_test:/system/xbin/drm1_func_test \\

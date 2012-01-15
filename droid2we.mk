@@ -123,7 +123,9 @@ PRODUCT_PACKAGES += \
     libOMX.TI.Video.encoder \
     libVendor_ti_omx \
     libaudiopolicy \
-    Usb
+    Usb \
+    mot_boot_mode \
+    charge_only_mode \
 
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise

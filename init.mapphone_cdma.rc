@@ -125,12 +125,12 @@ on post-fs
     chmod 2770 /data/tpapi/etc
     chmod 2770 /data/tpapi/etc/tpa
     chmod 2770 /data/tpapi/etc/tpa/persistent
-    chown system system /pds/security
-    chown system system /data/tpapi
-    chown system system /data/tpapi/etc
-    chown system system /data/tpapi/etc/tpa
-    chown system system /data/tpapi/etc/tpa/persistent
-
+    chown mot_tpapi mot_tpapi /pds/security
+    chown mot_tpapi mot_tpapi /data/tpapi
+    chown mot_tpapi mot_tpapi /data/tpapi/etc
+    chown mot_tpapi mot_tpapi /data/tpapi/etc/tpa
+    chown mot_tpapi mot_tpapi /data/tpapi/etc/tpa/persistent
+    group mot_tcmd radio input system log camera graphics sdcard_rw audio inet bluetooth wifi mot_pwric mot_accy compass cache mot_tpapi mount mot_tombstone mot_whisper net_bt_admin net_raw net_admin
     # directory for encryption management tool, enc_mgt_tool
     mkdir /data/emt
     chmod 0700 /data/emt
@@ -256,13 +256,14 @@ on boot
 # Set core max size (2G)
     setrlimit 4 2147483648 2147483648
 
-# The properties introduced by moto
-
+# Charge only mode services
+    exec /system/bin/mot_boot_mode
 on property:sys.chargeonly.mode=1
     start battd
     start console
     write /data/chargeonlymode charging
     exec /system/bin/charge_only_mode
+    exec /system/bin/stop zygote
 
 # Power up to normal
 on property:tcmd.suspend=0
@@ -405,7 +406,7 @@ service map /system/bin/sdptool add --channel=20 --network=2 MAP
 
 service tcmd /system/bin/tcmd
 #    class post-zygote_services
-    group mot_tcmd radio mot_pwric input system log camera graphics mot_accy sdcard_rw audio inet bluetooth wifi compass net_bt_admin mot_tombstone mot_tpapi mount
+    group mot_tcmd radio input system log camera graphics sdcard_rw audio inet bluetooth wifi mot_pwric mot_accy compass cache mot_tpapi mount mot_tombstone mot_whisper net_bt_admin net_raw net_admin
     socket local_tcmd stream 0660  mot_tcmd mot_tcmd
     socket batch_socket stream 0600  mot_tcmd mot_tcmd
     oneshot
@@ -559,9 +560,10 @@ service pm_init /system/bin/sh /system/usr/bin/pm_init.sh
 #    class post-zygote_services
     oneshot
 
-service modemlog /system/bin/modemlog
-   class post-zygote_services
-   oneshot
+###DOESN'T EXIST
+#service modemlog /system/bin/modemlog
+#   class post-zygote_services
+#   oneshot
 
 # aplogd is controlled by the persist.service.aplogd.enable system property
 service aplogd /system/bin/aplogd
@@ -597,6 +599,32 @@ on property:dev.bootcomplete=1
 #    start loadpreinstalls
 
 service mdm_panicd /system/bin/mdm_panicd
+    oneshot
+
+service smcdaemon /system/bin/startup_smc.sh
+#    class post-zygote_services
+    disabled
+    oneshot
+
+# ecckeyd daemon has dependency on SMC
+# It needs to be root because it needs to be able to read client's /proc/<pid>/status.
+# user/group as mot_tpapi/mot_tpapi does not give it enough permission
+service ecckeydaemon /system/bin/ecckeyd
+#    class post-zygote_services
+    socket ecckey_socket stream 660 mot_tpapi mot_tpapi
+    group mot_tpapi
+    disabled
+    oneshot
+
+on property:ro.service.start.smc=1
+    start smcdaemon
+    start ecckeydaemon
+
+service secclkd /system/bin/secclkd
+#    class post-zygote_services
+    socket secclk_socket stream 660 mot_secclkd mot_secclkd
+    user mot_tpapi
+    group mot_tpapi mot_sec_rtc mot_secclkd
     oneshot
 
 on property:tcmd.ctrl_adb=1
