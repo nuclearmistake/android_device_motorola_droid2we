@@ -560,10 +560,9 @@ service pm_init /system/bin/sh /system/usr/bin/pm_init.sh
 #    class post-zygote_services
     oneshot
 
-###DOESN'T EXIST
-#service modemlog /system/bin/modemlog
-#   class post-zygote_services
-#   oneshot
+service modemlog /system/bin/modemlog
+   class post-zygote_services
+   oneshot
 
 # aplogd is controlled by the persist.service.aplogd.enable system property
 service aplogd /system/bin/aplogd
