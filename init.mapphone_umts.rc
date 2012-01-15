@@ -264,7 +264,6 @@ on boot
     setrlimit 4 2147483648 2147483648
 
 # Charge only mode services
-    exec /system/bin/mot_boot_mode
 on property:sys.chargeonly.mode=1
     start battd
     start console
