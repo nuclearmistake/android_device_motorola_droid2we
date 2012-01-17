@@ -5,7 +5,7 @@ on init
 
 sysclktz 0
 
-loglevel 8
+loglevel 3
 
 # setup the global environment
     export PATH /sbin:/vendor/bin:/system/sbin:/system/bin:/system/xbin
@@ -313,7 +313,7 @@ on boot
     class_start default
 
     stop ril-daemon
-    sleep 60
+    sleep 30
     start ril-daemon
 
 ## Daemon processes to be run by init.
