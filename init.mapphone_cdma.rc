@@ -250,11 +250,11 @@ on boot
 # Load Authentec VPN kernel module
     insmod /system/lib/modules/vpnclient.ko
 
-# Start services
-    exec /system/bin/mot_boot_mode
-
 # Set core max size (2G)
     setrlimit 4 2147483648 2147483648
+
+# Start services
+    exec /system/bin/mot_boot_mode
 
 # Charge only mode services
 on property:sys.chargeonly.mode=1
