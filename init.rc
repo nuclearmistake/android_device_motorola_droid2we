@@ -320,7 +320,7 @@ service ueventd /sbin/ueventd
     critical
 
 service console /system/bin/sh
-#    class pre-zygote_services
+    class pre-zygote_services
     console
     disabled
     user shell
