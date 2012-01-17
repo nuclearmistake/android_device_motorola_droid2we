@@ -130,7 +130,6 @@ on post-fs
     chown system system /data/tpapi/etc
     chown system system /data/tpapi/etc/tpa
     chown system system /data/tpapi/etc/tpa/persistent
-    group mot_tcmd radio input system log camera graphics sdcard_rw audio inet bluetooth wifi mot_pwric mot_accy compass cache mot_tpapi mount mot_tombstone mot_whisper net_bt_admin net_raw net_admin
     # directory for encryption management tool, enc_mgt_tool
     mkdir /data/emt
     chmod 0700 /data/emt
@@ -180,6 +179,7 @@ on early-boot
     setprop ro.blan.interface usb0
 
     chmod 0666 /dev/DspBridge
+    start baseimage
     class_start media_early_init
 
 on boot
@@ -236,7 +236,7 @@ on boot
     chmod 0666 /sys/class/leds/torch-flash/flash_light
 
 # Enable panic on softlockup
-    write /proc/sys/kernel/softlockup_panic 1
+#    write /proc/sys/kernel/softlockup_panic 1
 
 # Load traffic shaping modules
     insmod /system/lib/modules/ifb.ko
@@ -321,7 +321,7 @@ service atvc /system/bin/dbvc_atvc_property_set
     group system
     oneshot
 
-#service watchdogd /system/bin/watchdogd
+service watchdogd /system/bin/watchdogd
 
 service telnet /system/bin/telnetd
 #    class pre-zygote_services
@@ -510,7 +510,7 @@ service btautoip /system/bin/dhcpcd -BK bnep0
     oneshot
 
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
-    class media_early_init
+#    class media_early_init
     user media
     group media graphics mot_whisper audio system
     oneshot

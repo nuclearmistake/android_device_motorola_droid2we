@@ -194,6 +194,7 @@ on early-boot
     setprop ro.EMPTY_APP_MEM 12288
  
     chmod 0666 /dev/DspBridge
+    start baseimage
     class_start media_early_init
 
 on boot
@@ -336,7 +337,7 @@ service atvc /system/bin/dbvc_atvc_property_set
     group system
     oneshot
 
-#service watchdogd  /system/bin/watchdogd
+service watchdogd  /system/bin/watchdogd
 #    class pre-zygote_services
 
 service telnet /system/bin/telnetd
@@ -570,7 +571,7 @@ service btautoip /system/bin/dhcpcd -BK bnep0
     oneshot
 
 service baseimage /system/bin/dspexec -v -T /system/lib/dsp/baseimage.dof
-    class media_early_init
+#    class media_early_init
     user  media
     group media graphics mot_whisper audio system
     oneshot
