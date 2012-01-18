@@ -308,10 +308,11 @@ on boot
 
 # Run sysinit
     exec /system/bin/sysinit
+    /system/xbin/busybox sleep 60
 
     class_start default
 
-    restart ril-daemon
+    #restart ril-daemon
 
 
 ## Daemon processes to be run by init.
@@ -364,7 +365,7 @@ service ril-daemon /system/bin/rild
     socket rild-debug stream 660 radio system
     user root
     group radio cache inet misc audio sdcard_rw net_admin net_raw
-    onrestart exec /system/xbin/busybox sleep 60
+    #onrestart exec /system/xbin/busybox sleep 60
 
 service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
     socket zygote stream 666
