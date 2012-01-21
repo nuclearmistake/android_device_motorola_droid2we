@@ -28,7 +28,7 @@ PRODUCT_COPY_FILES += \
     device/motorola/droid2we/init.mapphone_cdma.rc:root/init.mapphone_cdma.rc \
     device/motorola/droid2we/init.mapphone_umts.rc:root/init.mapphone_umts.rc \
     device/motorola/droid2we/ueventd.mapphone_cdma.rc:root/ueventd.mapphone_cdma.rc \
-#    device/motorola/droid2we/init.rc:root/init.rc
+    device/motorola/droid2we/init.rc:root/init.rc
 
    ## (2) Also get non-open-source GSM-specific aspects if available
 $(call inherit-product-if-exists, vendor/motorola/droid2we/droid2we-vendor.mk)
