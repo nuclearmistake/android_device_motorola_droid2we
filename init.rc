@@ -308,7 +308,7 @@ on boot
 
 # Run sysinit
     exec /system/bin/sysinit
-    /system/xbin/busybox sleep 60
+    #/system/xbin/busybox sleep 60
 
     class_start default
 
