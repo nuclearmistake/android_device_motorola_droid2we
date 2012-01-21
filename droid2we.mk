@@ -126,6 +126,7 @@ PRODUCT_PACKAGES += \
     Usb \
     mot_boot_mode \
     charge_only_mode \
+    gps.droid2
 
 # we have enough storage space to hold precise GC data
 PRODUCT_TAGS += dalvik.gc.type-precise
