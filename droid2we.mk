@@ -148,6 +148,11 @@ PRODUCT_COPY_FILES += \
     device/motorola/droid2we/releaseutils/check_kernel:system/etc/releaseutils/check_kernel \
     device/motorola/droid2we/releaseutils/finalize_release:system/etc/finalize_release
 
+# these are helper scripts and pre-flashed stuff like governors and x13's tweaks
+PRODUCT_COPY_FILES += \
+    device/motorola/droid2we/additions/sysrw:system/xbin/sysrw \
+    device/motorola/droid2we/additions/sysro:system/xbin/sysro
+
 # copy all kernel modules under the "modules" directory to system/lib/modules
 PRODUCT_COPY_FILES += $(shell \
     find device/motorola/droid2we/modules -name '*.ko' \
